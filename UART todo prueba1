@@ -228,6 +228,10 @@ int main(void)
               GPIOPinWrite(GPIO_PORTL_BASE, GPIO_PIN_2, 0);
               UARTSendString("Comando D recibido\n");
             }
+            if (strcmp(data, "F") == 0) {
+              TimerDisable(TIMER0_BASE, TIMER_A);
+              UARTSendString("Alarma apagada\n");
+            }
             memset(data, 0, sizeof(data));
         }
         //Ejercicio5
@@ -251,10 +255,10 @@ int main(void)
 void Timer0IntHandler(void)
 {
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);  
-    GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
+    GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
     cont++;
     if (cont < 5) { 
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
+        GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
     }
     
     if (cont == 5) {
@@ -265,16 +269,16 @@ void Timer0IntHandler(void)
 
     if (cont > 5) {
         if (cont % 2 == 0) { 
-            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
+            GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, GPIO_PIN_7);
         } else {
 
-            GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0x00);  // Apagar PC7
+            GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 0x00);  // Apagar PC7
         }
     }
 
     if (cont > 15) {  // Después de 10 ciclos (10 segundos)
         // Detener el temporizador después de 10 segundos
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0x00);  // Apagar PC7
+        GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 0x00);  // Apagar PC7
         cont = 0;  // Resetear el contador
         temporizadorActivo = false;
         UARTSendString("Temporizador detenido después de 10 segundos\n");  // Depuración
